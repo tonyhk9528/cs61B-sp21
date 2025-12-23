@@ -1,0 +1,11 @@
+{
+    "java.project.referencedLibraries": [
+        "c:\\git_repo\\skeleton-sp21\\proj0\\javalib\\ucb.jar",
+        "c:\\git_repo\\skeleton-sp21\\proj0\\javalib\\hamcrest-core-1.3.jar",
+        "c:\\git_repo\\skeleton-sp21\\proj0\\javalib\\junit-4.12.jar"
+    ],
+    "java.project.sourcePaths": [
+        "."
+    ],
+    "java.project.outputPath": "bin"
+}
