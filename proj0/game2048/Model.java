@@ -1,6 +1,7 @@
 package game2048;
 
 import java.util.Formatter;
+import java.util.HashSet;
 import java.util.Observable;
 
 
@@ -110,15 +111,61 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
+        board.setViewingPerspective(side);
+
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        for (int i = 0; i < board.size(); i++) {
+            // Check each col for move
+            changed = checkCol(i) || changed;
+        }
 
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
+
         return changed;
+    }
+
+    public boolean checkCol(int col) {
+        boolean moved = false;
+        Tile top_tile = board.tile(col, 3);
+        HashSet<Integer> merged = new HashSet<>();
+
+        for (int r = 2; r >= 0; r--) {
+            if (board.tile(col, r) == null) {
+                continue;
+            }
+            Tile curr_tile = board.tile(col, r);
+            int destination_r = findTopRow(curr_tile, merged);
+            if (curr_tile != board.tile(col, destination_r)) {
+                if (board.tile(col, destination_r) != null) {
+                    merged.add(destination_r);
+                    score += curr_tile.value() * 2;
+                }
+                board.move(col, destination_r, curr_tile);
+                moved = true;
+
+            }
+        }
+        return moved;
+    }
+
+    public int findTopRow (Tile t, HashSet<Integer> merged) {
+        int curr_col = t.col();
+        int curr_row = t.row();
+        int destination_row = curr_row;
+
+        for (int i = curr_row + 1; i <= 3; i++) {
+
+            if ((board.tile(curr_col, i) == null || board.tile(curr_col, i).value() == t.value()) && !merged.contains(i)) {
+                destination_row = i;
+            }
+        }
+        return destination_row;
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -138,6 +185,13 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                if (b.tile(i, j) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -148,6 +202,16 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                if (b.tile(i, j) == null) {
+                    continue;
+                }
+                else if (b.tile(i, j).value() == MAX_PIECE){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -159,6 +223,56 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+
+        int curr_val;
+        int up_val;
+        int down_val;
+        int left_val;
+        int right_val;
+
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                curr_val = b.tile(i, j).value();
+
+                // check up
+                if (i != 0) {
+                    up_val = b.tile(i - 1, j).value();
+                    if (curr_val == up_val) {
+                        return true;
+                    }
+                }
+
+                // check down
+                if (i != b.size() - 1) {
+                    down_val = b.tile(i + 1, j).value();
+                    if (curr_val == down_val) {
+                        return true;
+                    }
+                }
+
+                // check left
+                if (j != 0) {
+                    left_val = b.tile(i, j - 1).value();
+                    if (curr_val == left_val) {
+                        return true;
+                    }
+                }
+
+                // check right
+                if (j != b.size() - 1) {
+                    right_val = b.tile(i, j + 1).value();
+                    if (curr_val == right_val) {
+                        return true;
+                    }
+                }
+
+            }
+        }
+
+
         return false;
     }
 
