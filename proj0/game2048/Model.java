@@ -122,6 +122,7 @@ public class Model extends Observable {
         }
 
         board.setViewingPerspective(Side.NORTH);
+        
         checkGameOver();
         if (changed) {
             setChanged();
@@ -132,7 +133,6 @@ public class Model extends Observable {
 
     public boolean checkCol(int col) {
         boolean moved = false;
-        Tile top_tile = board.tile(col, 3);
         HashSet<Integer> merged = new HashSet<>();
 
         for (int r = 2; r >= 0; r--) {
@@ -140,7 +140,7 @@ public class Model extends Observable {
                 continue;
             }
             Tile curr_tile = board.tile(col, r);
-            int destination_r = findTopRow(curr_tile, merged);
+            int destination_r = findTopRow(curr_tile, col, r, merged);
             if (curr_tile != board.tile(col, destination_r)) {
                 if (board.tile(col, destination_r) != null) {
                     merged.add(destination_r);
@@ -154,9 +154,7 @@ public class Model extends Observable {
         return moved;
     }
 
-    public int findTopRow (Tile t, HashSet<Integer> merged) {
-        int curr_col = t.col();
-        int curr_row = t.row();
+    public int findTopRow (Tile t, int curr_col, int curr_row, HashSet<Integer> merged) {
         int destination_row = curr_row;
 
         for (int i = curr_row + 1; i <= 3; i++) {
