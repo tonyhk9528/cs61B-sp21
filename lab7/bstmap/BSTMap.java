@@ -1,7 +1,5 @@
 package bstmap;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
-
 import java.util.Iterator;
 import java.util.Set;
 
