@@ -56,7 +56,7 @@ public class ArrayDeque<T> {
         this.items = newItem;
     }
 
-    public boolean isEmpmty() {
+    public boolean isEmpty() {
         return (size == 0);
     }
 
@@ -82,7 +82,7 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        if (isEmpmty()) {
+        if (isEmpty()) {
             return null;
         }
 
@@ -100,7 +100,7 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
-        if (isEmpmty()) {
+        if (isEmpty()) {
             return null;
         }
 
