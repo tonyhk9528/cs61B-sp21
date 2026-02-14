@@ -2,15 +2,15 @@ package deque;
 
 public class ArrayDeque<T> {
     int size;
-    int first;
-    int last;
+    int nextFirst;
+    int nextLast;
     T[] items;
 
 
     public ArrayDeque() {
         this.size = 0;
-        this.first = 0;
-        this.last = 0;
+        this.nextFirst = 0;
+        this.nextLast = 0;
         this.items = (T[]) new Object[8];
     }
 
@@ -19,40 +19,37 @@ public class ArrayDeque<T> {
             resize();
         }
 
-        int newFirst = (first - 1 + items.length) % items.length;
+        int newFirst = (nextFirst + items.length) % items.length;
         items[newFirst] = item;
-        this.first = newFirst;
+        this.nextFirst = (newFirst - 1 + items.length) % items.length;
         size += 1;
-
     }
 
     public void addLast(T item) {
         if (size == items.length) {
             resize();
         }
-        int newLast = (last + 1 + items.length) % items.length;
+        int newLast = (nextLast + items.length) % items.length;
 
         items[newLast] = item;
-        this.last = newLast;
+        this.nextLast = (newLast + 1 + items.length) % items.length;
         size += 1;
     }
 
     private void resize() {
         T[] newItem = (T[]) new Object[size * 2];
 
-        if (first <= last) {
-            java.lang.System.arraycopy(items, first, newItem, 0, size);
+        if (nextFirst <= nextLast) {
+            java.lang.System.arraycopy(items, nextFirst + 1, newItem, 0, size);
         } else {
             // first to items.length
-            java.lang.System.arraycopy(items, first, newItem, 0, items.length - first);
+            java.lang.System.arraycopy(items, nextFirst + 1, newItem, 0, items.length - nextFirst - 1);
             // 0 to last
-            if (first != 0) {
-                java.lang.System.arraycopy(items, 0, newItem, items.length - first, last);
-            }
+            java.lang.System.arraycopy(items, 0, newItem, items.length - nextFirst - 1, nextLast);
         }
 
-        first = 0;
-        last = size;
+        nextFirst = items.length - 1;
+        nextLast = size;
         this.items = newItem;
     }
 
@@ -65,17 +62,20 @@ public class ArrayDeque<T> {
     }
 
     public void printDeque() {
-        if (first <= last) {
-            for (int i = first; i < size -first; i++) {
+        if (isEmpty()) {
+            return;
+        }
+        if (nextFirst < nextLast) {
+            for (int i = nextFirst + 1; i < size + nextFirst + 1; i++) {
                 System.out.print(items[i]);
             }
         } else {
             // first to items.length
-            for (int i = first; i < items.length; i++) {
+            for (int i = nextFirst + 1; i < items.length; i++) {
                 System.out.print(items[i]);
             }
             // 0 to last
-            for (int i = 0; i < last + 1; i++) {
+            for (int i = 0; i < nextLast; i++) {
                 System.out.print(items[i]);
             }
         }
@@ -90,10 +90,10 @@ public class ArrayDeque<T> {
             resize();
         }
 
-        int newFirst = (first + 1 + items.length) % items.length;
-        T removeItem = items[first];
-        items[first] = null;
-        first = newFirst;
+        int newFirst = (nextFirst + items.length) % items.length;
+        T removeItem = items[nextFirst + 1];
+        items[nextFirst + 1] = null;
+        nextFirst = newFirst - 1;
         size -= 1;
 
         return removeItem;
@@ -108,10 +108,10 @@ public class ArrayDeque<T> {
             resize();
         }
 
-        int newLast = (last - 1 + items.length) % items.length;
-        T removeItem = items[last];
-        items[last] = null;
-        last = newLast;
+        int newLast = (nextLast + items.length) % items.length;
+        T removeItem = items[newLast];
+        items[newLast] = null;
+        nextLast = newLast + 1;
         size -= 1;
 
         return removeItem;
@@ -123,7 +123,7 @@ public class ArrayDeque<T> {
             return null;
         }
 
-        return items[(first + index) % items.length];
+        return items[(nextFirst + 1 + index) % items.length];
     }
 
 }
