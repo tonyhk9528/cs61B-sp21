@@ -7,7 +7,7 @@ public class ArrayDeque<T> {
     T[] items;
 
 
-    ArrayDeque() {
+    public ArrayDeque() {
         this.size = 0;
         this.first = 0;
         this.last = 0;
