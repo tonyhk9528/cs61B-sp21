@@ -38,18 +38,14 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
     private void resize(int capacity) {
         T[] newItem = (T[]) new Object[capacity];
 
-        if (nextFirst <= nextLast) {
-            java.lang.System.arraycopy(items, nextFirst + 1, newItem, 0, size);
-        } else {
-            // first to items.length
-            java.lang.System.arraycopy(items, nextFirst + 1, newItem, 0, items.length - nextFirst - 1);
-            // 0 to last
-            java.lang.System.arraycopy(items, 0, newItem, items.length - nextFirst - 1, nextLast);
+        for (int i = 0; i < size; i++) {
+            newItem[i] = get(i);
         }
 
+        this.items = newItem;
         nextFirst = items.length - 1;
         nextLast = size;
-        this.items = newItem;
+
     }
 
     public boolean isEmpty() {
@@ -85,7 +81,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
             return null;
         }
 
-        if (((size - 1) / (double) (items.length)) < 0.25 && size > 16) {
+        if (((size - 1) / (double) (items.length)) < 0.25 && items.length > 16) {
             resize(items.length / 2 ); // size down
         }
 

@@ -39,7 +39,7 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
     @Override
     public void addLast(T item) {
         if (this.isEmpty()) {
-            super.addFirst(item);
+            super.addLast(item);
             return;
         }
 
@@ -59,6 +59,8 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
 
         if (this.comparator.compare(currMax, removeItem) == 0) {
             this.maxIndex = findNewMax();
+        } else {
+            this.maxIndex -= 1;
         }
         return removeItem;
     }
