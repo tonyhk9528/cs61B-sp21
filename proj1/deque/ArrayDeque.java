@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
+public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
     int size;
     int nextFirst;
     int nextLast;
@@ -82,7 +82,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
         }
 
         if (((size - 1) / (double) (items.length)) < 0.25 && items.length > 16) {
-            resize(items.length / 2 ); // size down
+            resize(items.length / 2); // size down
         }
 
         int first = (nextFirst + 1 + items.length) % items.length;
@@ -122,13 +122,13 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
     }
 
     public Iterator<T> iterator() {
-        return new arrayDequeIterator();
+        return new ArrayDequeIterator();
     }
 
-    private class arrayDequeIterator implements Iterator<T> {
+    private class ArrayDequeIterator implements Iterator<T> {
         int curr;
 
-        private arrayDequeIterator() {
+        private ArrayDequeIterator() {
             this.curr = 0;
         }
 
@@ -144,4 +144,27 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T>{
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Deque)) {
+            return false;
+        }
+
+        Deque<T> other = (Deque<T>) o;
+
+        if (this.size != other.size()) {
+            return false;
+        }
+
+
+        for (int i = 0; i < size; i++) {
+            if (!(this.get(i).equals(other.get(i)))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

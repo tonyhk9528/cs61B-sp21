@@ -102,7 +102,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         if (index == 0) {
             return curr.item;
         }
-        return getRecursive(index -1 , curr.next);
+        return getRecursive(index - 1, curr.next);
     }
 
     public Iterator<T> iterator() {
@@ -112,7 +112,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     private class LLDIterator implements Iterator<T> {
         int curr;
 
-        public LLDIterator() {
+        LLDIterator() {
             this.curr = 0;
         }
 
@@ -127,6 +127,31 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
             this.curr += 1;
             return currItem;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Deque)) {
+            return false;
+        }
+
+        Deque<T> other = (Deque<T>) o;
+
+        if (this.size != other.size()) {
+            return false;
+        }
+
+        boolean flag = true;
+
+        for (int i = 0; i < size; i++) {
+            if (!(this.get(i).equals(other.get(i)))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 

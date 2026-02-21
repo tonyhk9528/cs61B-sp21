@@ -18,6 +18,20 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
         return this.get(maxIndex);
     }
 
+    public T max(Comparator<T> c) {
+        if (this.isEmpty()) {
+            return null;
+        }
+        T maxItem = this.get(0);
+
+        for (T item : this) {
+            if (c.compare(maxItem, item) < 0) {
+                maxItem = item;
+            }
+        }
+        return maxItem;
+    }
+
     @Override
     public void addFirst(T item) {
         if (this.isEmpty()) {
